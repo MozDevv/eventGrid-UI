@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  eventGrid:
+    container_name: event-grid-ui
+    image: event-grid:nginx
+    ports:
+      - '80:80'
+    restart: unless-stopped
+    networks:
+      - eventGrid-net
+
+networks:
+  eventGrid-net:
+    driver: bridge

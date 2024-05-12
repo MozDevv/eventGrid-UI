@@ -5,6 +5,7 @@ import ACalendar from 'src/views/calendar/ACalendar';
 import OauthCallback from 'src/views/calendar/OauthCallback';
 import CalendlyCallback from 'src/views/calendar/CalendlyCallback';
 import Clients2 from 'src/views/clients2/Clients2';
+import Booking from 'src/views/booking/Booking';
 
 const EnhancedTable = Loadable(lazy(() => import('../views/clients/EnhancedTable')));
 
@@ -34,6 +35,7 @@ const Router = [
       { path: '/ui/typography', exact: true, element: <TypographyPage /> },
       { path: '/calendar', exact: true, element: <ACalendar /> },
       { path: '/clients', exact: true, element: <Clients2 /> },
+      { path: '/online-booking', exact: true, element: <Booking /> },
 
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],

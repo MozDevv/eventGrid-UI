@@ -32,6 +32,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useNavigate } from 'react-router';
 import calenderImg from './../../assets/images/img/google-calendar.png';
 import calendlyImg from './../../assets/images/img/Calendly-New-Logo.png';
+import Spinner from '../spinner/Spinner';
 
 moment.locale('en-GB');
 const localizer = momentLocalizer(moment);
@@ -323,201 +324,204 @@ const ACalendar = () => {
   const handleGetCalendrEvents = () => {};
   return (
     <PageContainer title="Calendar ui" description="this is Calendar page">
-      {selectedEvent && (
-        <OpenEventModal
-          selectedId={selectedId}
-          ColorVariation={ColorVariation}
-          selectinputChangeHandler={selectinputChangeHandler}
-          openModal={openModal}
-          setOpenModal={setOpenModal}
-          setAllEvents={setAllEvents}
-          selectedEvent={selectedEvent}
-        />
-      )}
-      {openAddEvent && (
+      {loading ? (
+        <Spinner />
+      ) : (
         <>
-          <Drawer
-            TransitionComponent={Slide}
-            SlideProps={{
-              direction: 'down', // Slide direction
-              timeout: 500, // Transition duration
-            }}
-            onClose={handleDrawerClose}
-            anchor="top"
-            open={openAddEvent}
-          >
-            <TopOnlyDrawer
-              fetchAllEvents={fetchAllEvents}
-              setAllEvents={setAllEvents}
-              openAddEvent={openAddEvent}
-              setOpenAddEvent={setOpenAddEvent}
+          {selectedEvent && (
+            <OpenEventModal
+              selectedId={selectedId}
               ColorVariation={ColorVariation}
+              selectinputChangeHandler={selectinputChangeHandler}
+              openModal={openModal}
+              setOpenModal={setOpenModal}
+              setAllEvents={setAllEvents}
+              selectedEvent={selectedEvent}
             />
-          </Drawer>
+          )}
+          {openAddEvent && (
+            <>
+              <Drawer
+                TransitionComponent={Slide}
+                SlideProps={{
+                  direction: 'down', // Slide direction
+                  timeout: 500, // Transition duration
+                }}
+                onClose={handleDrawerClose}
+                anchor="top"
+                open={openAddEvent}
+              >
+                <TopOnlyDrawer
+                  fetchAllEvents={fetchAllEvents}
+                  setAllEvents={setAllEvents}
+                  openAddEvent={openAddEvent}
+                  setOpenAddEvent={setOpenAddEvent}
+                  ColorVariation={ColorVariation}
+                />
+              </Drawer>
+            </>
+          )}
+          <Breadcrumbs title="Calendar" subtitle="App" />
+          <Card>
+            <Box sx={{ display: 'flex', mb: '10px', justifyContent: 'space-between' }}>
+              <Button onClick={handleOpenDrawer} variant="contained" sx={{ ml: '20px' }}>
+                New Event
+              </Button>
+              <Box sx={{ display: 'flex', gap: '20px' }}>
+                {' '}
+                <Button
+                  onClick={handleCalendlyRedirect}
+                  variant="contained"
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+
+                    padding: '10px 35px',
+                    textAlign: 'center',
+                    transition: '0.5s',
+                    position: 'relative',
+                    boxShadow: 'rgba(0, 0, 0, 0.16) 0px 1px 4px',
+                    borderRadius: '10px',
+                  }}
+                  color="text"
+                >
+                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    {' '}
+                    <img src={calendlyImg} height={28} width={50} alt="" />
+                    Calendly
+                  </Box>
+                  <Typography
+                    sx={{
+                      fontSize: '9px',
+                      borderRadius: '10px',
+
+                      padding: '0 4px',
+                      position: 'absolute',
+                      top: 0,
+                      color: '#00C631',
+
+                      right: '1px',
+                    }}
+                  >
+                    <FeatherIcon icon="link" size={20} />
+                  </Typography>
+                </Button>
+                <Button
+                  onClick={handleRedirectUri}
+                  variant="contained"
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    padding: '10px 35px',
+                    textAlign: 'center',
+                    transition: '0.5s',
+                    position: 'relative',
+                    boxShadow: 'rgba(0, 0, 0, 0.16) 0px 1px 4px',
+                    borderRadius: '10px',
+                  }}
+                  color="text"
+                >
+                  <img src={calenderImg} height={28} width={28} alt="" />
+                  Google Calender
+                  <Typography
+                    sx={{
+                      fontSize: '9px',
+                      borderRadius: '10px',
+
+                      padding: '0 4px',
+                      position: 'absolute',
+                      top: 0,
+                      color: '#00C631',
+
+                      right: '1px',
+                    }}
+                  >
+                    <FeatherIcon icon="link" size={20} />
+                  </Typography>
+                </Button>
+              </Box>
+            </Box>
+
+            <CardContent>
+              <Calendar
+                selectable
+                setAllEvents={setAllEvents}
+                fetchAllEvents={fetchAllEvents}
+                events={events}
+                defaultView="month"
+                scrollToTime={new Date(1970, 1, 1, 6)}
+                defaultDate={new Date()}
+                localizer={localizer}
+                style={{ height: 'calc(100vh - 350px' }}
+                onSelectEvent={(event) => handleSelectEvent(event)}
+                onSelectSlot={(slotInfo) => {
+                  addNewEventAlert(slotInfo);
+                  console.log('slot>>>>>>>>', slotInfo);
+                }}
+                eventPropGetter={(event) => eventColors(event)}
+              />
+            </CardContent>
+          </Card>
+          <Dialog open={open} onClose={handleClose} fullWidth>
+            <form
+              onSubmit={handleAddEvent}
+              //</Dialog>onSubmit={update ? updateEvent : submitHandler}
+            >
+              <DialogContent>
+                <Typography variant="h3" sx={{ mb: 2 }}>
+                  {update ? 'Update Event' : 'Add Event'}
+                </Typography>
+                <FormLabel htmlFor="Event Title">Event Title</FormLabel>
+                <CustomTextField
+                  id="Event Title"
+                  placeholder="Enter Event Title"
+                  variant="outlined"
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  onChange={(e) => setName(e.target.value)}
+                  size="small"
+                />
+                <FormLabel>Select Event Color</FormLabel>
+
+                {ColorVariation.map((mcolor) => {
+                  return (
+                    <Fab
+                      color="primary"
+                      style={{ backgroundColor: mcolor.eColor }}
+                      sx={{ marginRight: '3px' }}
+                      size="small"
+                      key={mcolor.id}
+                      onClick={() => selectinputChangeHandler(mcolor.value)}
+                    >
+                      {mcolor.value === color ? <FeatherIcon icon="check" size="16" /> : ''}
+                    </Fab>
+                  );
+                })}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+
+                {update ? (
+                  <Button
+                    type="submit"
+                    color="error"
+                    variant="contained"
+                    onClick={() => deleteHandler(update)}
+                  >
+                    Delete
+                  </Button>
+                ) : (
+                  ''
+                )}
+                <Button type="submit" disabled={!name} variant="contained">
+                  {update ? 'Update' : 'Add'}
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>{' '}
         </>
       )}
-
-      <Breadcrumbs title="Calendar" subtitle="App" />
-
-      <Card>
-        <Box sx={{ display: 'flex', mb: '10px', justifyContent: 'space-between' }}>
-          <Button onClick={handleOpenDrawer} variant="contained" sx={{ ml: '20px' }}>
-            New Event
-          </Button>
-          <Box sx={{ display: 'flex', gap: '20px' }}>
-            {' '}
-            <Button
-              onClick={handleCalendlyRedirect}
-              variant="contained"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-
-                padding: '10px 35px',
-                textAlign: 'center',
-                transition: '0.5s',
-                position: 'relative',
-                boxShadow: 'rgba(0, 0, 0, 0.16) 0px 1px 4px',
-                borderRadius: '10px',
-              }}
-              color="text"
-            >
-              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                {' '}
-                <img src={calendlyImg} height={28} width={50} alt="" />
-                Calendly
-              </Box>
-              <Typography
-                sx={{
-                  fontSize: '9px',
-                  borderRadius: '10px',
-
-                  padding: '0 4px',
-                  position: 'absolute',
-                  top: 0,
-                  color: '#00C631',
-
-                  right: '1px',
-                }}
-              >
-                <FeatherIcon icon="link" size={20} />
-              </Typography>
-            </Button>
-            <Button
-              onClick={handleRedirectUri}
-              variant="contained"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                padding: '10px 35px',
-                textAlign: 'center',
-                transition: '0.5s',
-                position: 'relative',
-                boxShadow: 'rgba(0, 0, 0, 0.16) 0px 1px 4px',
-                borderRadius: '10px',
-              }}
-              color="text"
-            >
-              <img src={calenderImg} height={28} width={28} alt="" />
-              Google Calender
-              <Typography
-                sx={{
-                  fontSize: '9px',
-                  borderRadius: '10px',
-
-                  padding: '0 4px',
-                  position: 'absolute',
-                  top: 0,
-                  color: '#00C631',
-
-                  right: '1px',
-                }}
-              >
-                <FeatherIcon icon="link" size={20} />
-              </Typography>
-            </Button>
-          </Box>
-        </Box>
-
-        <CardContent>
-          <Calendar
-            selectable
-            setAllEvents={setAllEvents}
-            fetchAllEvents={fetchAllEvents}
-            events={events}
-            defaultView="month"
-            scrollToTime={new Date(1970, 1, 1, 6)}
-            defaultDate={new Date()}
-            localizer={localizer}
-            style={{ height: 'calc(100vh - 350px' }}
-            onSelectEvent={(event) => handleSelectEvent(event)}
-            onSelectSlot={(slotInfo) => {
-              addNewEventAlert(slotInfo);
-              console.log('slot>>>>>>>>', slotInfo);
-            }}
-            eventPropGetter={(event) => eventColors(event)}
-          />
-        </CardContent>
-      </Card>
-
-      <Dialog open={open} onClose={handleClose} fullWidth>
-        <form
-          onSubmit={handleAddEvent}
-          //</Dialog>onSubmit={update ? updateEvent : submitHandler}
-        >
-          <DialogContent>
-            <Typography variant="h3" sx={{ mb: 2 }}>
-              {update ? 'Update Event' : 'Add Event'}
-            </Typography>
-            <FormLabel htmlFor="Event Title">Event Title</FormLabel>
-            <CustomTextField
-              id="Event Title"
-              placeholder="Enter Event Title"
-              variant="outlined"
-              fullWidth
-              sx={{ mb: 2 }}
-              onChange={(e) => setName(e.target.value)}
-              size="small"
-            />
-            <FormLabel>Select Event Color</FormLabel>
-
-            {ColorVariation.map((mcolor) => {
-              return (
-                <Fab
-                  color="primary"
-                  style={{ backgroundColor: mcolor.eColor }}
-                  sx={{ marginRight: '3px' }}
-                  size="small"
-                  key={mcolor.id}
-                  onClick={() => selectinputChangeHandler(mcolor.value)}
-                >
-                  {mcolor.value === color ? <FeatherIcon icon="check" size="16" /> : ''}
-                </Fab>
-              );
-            })}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-
-            {update ? (
-              <Button
-                type="submit"
-                color="error"
-                variant="contained"
-                onClick={() => deleteHandler(update)}
-              >
-                Delete
-              </Button>
-            ) : (
-              ''
-            )}
-            <Button type="submit" disabled={!name} variant="contained">
-              {update ? 'Update' : 'Add'}
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
     </PageContainer>
   );
 };

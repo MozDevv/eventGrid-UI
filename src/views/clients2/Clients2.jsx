@@ -34,7 +34,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import Fade from '@mui/material/Fade';
 
 function Clients2() {
-  const [openSnackBar, setOpenSnackBar] = useState(true);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
