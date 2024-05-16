@@ -1,7 +1,7 @@
 export const clients = [
   {
     id: 1,
-    name: 'Mozz',
+    name: 'Mozza',
     email: 'mozz@io.com',
     phoneNumber: +1642321200,
     eventID: 18,
