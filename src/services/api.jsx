@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-catch */
 import axios from 'axios';
 
-export const API_BASE_URL = 'http://localhost:8082/api/v1';
+export const API_BASE_URL = 'http://159.65.59.226:8000/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -17,7 +17,7 @@ const setAuthorizationHeader = () => {
 };
 
 const endpoints = {
-  login: '/auth/login',
+  login: '/auth/login/',
 
   register: '/auth/register',
 

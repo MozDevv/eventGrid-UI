@@ -1,0 +1,40 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    branches: ['master']
+  pull_request:
+    branches: ['master']
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker Image
+        run: docker build -t event-grid:nginx .
+
+      - name: Log in to Docker Hub
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Tag Docker Image
+        run: docker tag event-grid:nginx mozdev/eventgrid-ui
+
+      - name: Push Docker Image
+        run: docker push mozdev/eventgrid-ui
+
+      - name: SSH into DigitalOcean Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.DROPLET_SSH_PORT }}
+          script: |
+            cd backend
+            docker pull mozdev/eventgrid-ui:latest
+            docker stop event-grid-ui || true
+            docker rm event-grid-ui || true
+            docker-compose up -d
