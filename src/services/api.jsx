@@ -3,6 +3,8 @@ import axios from 'axios';
 
 export const API_BASE_URL = 'http://159.65.59.226:8000/api/v1';
 
+//export const API_BASE_URL = 'http://localhost:8080/api/v1';
+
 const api = axios.create({
   baseURL: API_BASE_URL,
 });
@@ -32,6 +34,10 @@ const endpoints = {
   saveOauthCreds: (id) => `/user/google/callback/${id}`,
 
   fetchUserDetails: (id) => `/user/${id}`,
+
+  fetchUserClients: (id) => `/clients/${id}`,
+
+  createClient: (id) => `/new/clients/${id}`,
 
   getCalendarEvents: (id) => `/calender-events/${id}`,
 

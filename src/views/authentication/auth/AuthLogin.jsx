@@ -31,7 +31,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
     const user = { email, password };
 
     try {
-      const res = await axios.post('http://159.65.59.226:8000/api/v1/auth/login', user);
+      const res = await apiService.post(endpoints.login, user);
       if (res.status === 200) {
         const id = res.data.id;
         const token = res.data.token;

@@ -216,16 +216,18 @@ export default function EnhancedTable({ setOpenAddClient, allClients }) {
     };
   }
 
-  const rows = allClients.map((client) =>
-    createData(
-      client.clientId,
-      client.clientName,
-      client.phoneNumber,
-      client.email,
-      client.appointmentDate,
-      client.createdAt,
-    ),
-  );
+  const rows =
+    allClients &&
+    allClients.map((client) =>
+      createData(
+        client.clientId,
+        client.clientName,
+        client.phoneNumber,
+        client.email,
+        client.appointmentDate,
+        client.createdAt,
+      ),
+    );
 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');

@@ -32,6 +32,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import Fade from '@mui/material/Fade';
+import endpoints, { apiService } from 'src/services/api';
 
 function Clients2() {
   const [openSnackBar, setOpenSnackBar] = useState(false);
@@ -79,14 +80,10 @@ function Clients2() {
   const fetchAllClients = async () => {
     setIsLoading(true);
     const userId = localStorage.getItem('userId');
-    const token = localStorage.getItem('token');
+    //const token = localStorage.getItem('token');
 
     try {
-      const res = await axios.get(`http://localhost:8082/api/v1/clients/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await apiService.get(endpoints.fetchUserClients(userId));
 
       console.log(res.data);
 
@@ -111,11 +108,13 @@ function Clients2() {
     const token = localStorage.getItem('token');
 
     try {
-      const res = await axios.post(
-        `http://localhost:8082/api/v1/new/clients/${userId}`,
+      const res = await apiService.post(
+        endpoints.createClient(userId),
 
         clientData,
       );
+
+      console.log(res.data);
     } catch (error) {
       console.log('error adding client', error);
     } finally {

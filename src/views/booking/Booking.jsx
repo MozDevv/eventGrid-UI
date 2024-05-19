@@ -30,7 +30,7 @@ function Booking() {
       console.log(userIdFromSessionStorage);
     }
   }, []);
-  const link = `http://localhost:3000/booking/${userId}`;
+  const link = `http://localhost:8080/booking/${userId}`;
 
   const copyToClipboard = async () => {
     try {
