@@ -49,12 +49,16 @@ const AuthRegister = ({ title, subtitle, subtext }) => {
         console.log('token', res.data.token);
 
         const token = res.data.token;
-      } else {
-        setError(true);
+      } else if (res.status === 500) {
+        setError({ status: true, message: 'Email Already Exists!' });
       }
     } catch (error) {
-      setError(true);
-      console.log('The error is error', error);
+      if (error.response.data.data === 'Email Already Exists') {
+        setError({ status: true, message: 'Email Already Exists!' });
+      } else {
+        setError({ status: true, message: 'Registration failed! Please try again.' });
+      }
+      console.log('The error is error', error.response.data.data);
     } finally {
       setIsLoading(false);
     }
@@ -72,9 +76,7 @@ const AuthRegister = ({ title, subtitle, subtext }) => {
 
       <Box>
         <Stack mb={3}>
-          {error.status && (
-            <Typography color="crimson">Registration failed! Please try again.</Typography>
-          )}
+          {error.status && <Typography color="crimson">{error.message}</Typography>}
           <Typography
             variant="subtitle1"
             fontWeight={600}

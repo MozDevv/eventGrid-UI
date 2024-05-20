@@ -72,13 +72,14 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
             sx={{
               display: 'flex',
               flexDirection: 'row',
-              gap: '5px',
+
+              alignItems: 'center',
             }}
           >
             {' '}
             <Typography color="crimson">Unauthorised, Please try again.</Typography>
-            <IconButton onClick={() => setError(false)}>
-              <CloseIcon />
+            <IconButton sx={{ marginLeft: '-7px' }} onClick={() => setError(false)}>
+              <CloseIcon fontSize="small" color="crimson" />
             </IconButton>
           </Box>
         )}
