@@ -6,6 +6,7 @@ import OauthCallback from 'src/views/calendar/OauthCallback';
 import CalendlyCallback from 'src/views/calendar/CalendlyCallback';
 import Clients2 from 'src/views/clients2/Clients2';
 import Booking from 'src/views/booking/Booking';
+import BookAppointment from 'src/views/book-appointment/BookAppointment';
 
 const EnhancedTable = Loadable(lazy(() => import('../views/clients/EnhancedTable')));
 
@@ -50,6 +51,7 @@ const Router = [
       { path: '/auth/register', element: <Register /> },
       { path: '/auth/login', element: <Login /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
+      { path: 'book-appointment/:userId', element: <BookAppointment /> },
     ],
   },
 ];

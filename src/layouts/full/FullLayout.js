@@ -42,9 +42,7 @@ const FullLayout = () => {
         isMobileSidebarOpen={isMobileSidebarOpen}
         onSidebarClose={() => setMobileSidebarOpen(false)}
       />
-      {/* ------------------------------------------- */}
-      {/* Main Wrapper */}
-      {/* ------------------------------------------- */}
+
       <PageWrapper className="page-wrapper">
         {/* ------------------------------------------- */}
         {/* Header */}
